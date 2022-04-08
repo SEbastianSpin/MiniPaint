@@ -260,7 +260,7 @@
 			this.toolEng.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolEng.Name = "toolEng";
 			this.toolEng.Size = new System.Drawing.Size(29, 24);
-			this.toolEng.Text = "toolStripButton1";
+			this.toolEng.Text = "EN";
 			// 
 			// toolPol
 			// 
@@ -269,7 +269,8 @@
 			this.toolPol.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolPol.Name = "toolPol";
 			this.toolPol.Size = new System.Drawing.Size(29, 24);
-			this.toolPol.Text = "toolStripButton1";
+			this.toolPol.Text = "ES";
+			this.toolPol.Click += new System.EventHandler(this.toolPol_Click);
 			// 
 			// toolStripLabel5
 			// 

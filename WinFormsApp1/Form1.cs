@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.Threading;
+using System.Globalization;
+
 namespace WinFormsApp1
 {
 	public partial class Form1 : Form
@@ -20,6 +23,7 @@ namespace WinFormsApp1
 		int pX = -1;
 		int pY = -1;
 		bool lines = false;
+		bool lifted = false;
 		bool sqaure = false;
 		bool elipse = false;
 
@@ -89,12 +93,16 @@ namespace WinFormsApp1
 
 		private void pictureBox_SizeChanged(object sender, EventArgs e)
 		{
-			drawArea = new Bitmap(pictureBox.Size.Width, pictureBox.Size.Height);
-			pictureBox.Image = drawArea;
-			using (Graphics g = Graphics.FromImage(drawArea))
+			Bitmap NewDrawArea = new Bitmap(pictureBox.Size.Width, pictureBox.Size.Height);
+			//drawArea = new Bitmap(pictureBox.Size.Width, pictureBox.Size.Height);
+			
+			using (Graphics g = Graphics.FromImage(NewDrawArea))
 			{
 				g.Clear(System.Drawing.Color.White);
+				g.DrawImage(drawArea, 0, 0);
 			}
+			drawArea = NewDrawArea;
+			pictureBox.Image = drawArea;
 		}
 
 		private void label1_Click(object sender, EventArgs e)
@@ -112,7 +120,7 @@ namespace WinFormsApp1
 					if(lines) g.DrawLine(pen, pX, pY, e.X, e.Y);
 
 
-					if (sqaure) {
+					if (sqaure ) {
 
 						
 
@@ -176,6 +184,7 @@ namespace WinFormsApp1
 		{
 			if (e.Button == MouseButtons.Left) {
 				draw = true;
+				lifted = false;
 				LastMousePosX = e.X;
 				LastMousePosY = e.Y;
 				
@@ -196,6 +205,7 @@ namespace WinFormsApp1
 			if (e.Button == MouseButtons.Left)
 			{
 				draw = false;
+				lifted = true;
 				LastMousePosX = -1;
 				LastMousePosY =-1;
 				//pX = e.X;
@@ -285,6 +295,13 @@ namespace WinFormsApp1
 			lines = false;
 			sqaure = false;
 			elipse = true;
+		}
+
+		private void toolPol_Click(object sender, EventArgs e)
+		{
+			CultureInfo.CurrentCulture = new CultureInfo("es-ES", false);
+			//this.Controls.Clear();
+			InitializeComponent();
 		}
 	}
 }

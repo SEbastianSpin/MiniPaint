@@ -23,7 +23,7 @@ namespace WinFormsApp1
 		int pX = -1;
 		int pY = -1;
 		bool lines = false;
-		bool lifted = false;
+		bool inuse = false;
 		bool sqaure = false;
 		bool elipse = false;
 
@@ -53,6 +53,15 @@ namespace WinFormsApp1
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			foreach (KnownColor color in Enum.GetValues(typeof(KnownColor))) {
+
+			//	PictureBox ColorBox = new PictureBox();
+			//	Bitmap drawAreaColor = new Bitmap(25, 25);
+				
+			//	using (Graphics g = Graphics.FromImage(drawAreaColor)) {
+				//	g.Clear(Color.FromKnownColor(color));
+
+				//}
+				//ColorBox.Image = drawAreaColor;
 
 
 				Button button = new Button();
@@ -86,7 +95,8 @@ namespace WinFormsApp1
 				 };
 				
 				ColorsLayoutPanel.Controls.Add(button);
-			
+				//ColorsLayoutPanel.Controls.Add(ColorBox);
+
 
 			}
 		}
@@ -120,7 +130,7 @@ namespace WinFormsApp1
 					if(lines) g.DrawLine(pen, pX, pY, e.X, e.Y);
 
 
-					if (sqaure ) {
+					if (sqaure&& inuse) {
 
 						
 
@@ -138,7 +148,7 @@ namespace WinFormsApp1
 
 					}
 
-					if (elipse)
+					if (elipse && inuse)//
 					{
 
 						Bitmap oldBitmap = new Bitmap(drawArea, drawArea.Size.Width, drawArea.Size.Height);
@@ -184,7 +194,7 @@ namespace WinFormsApp1
 		{
 			if (e.Button == MouseButtons.Left) {
 				draw = true;
-				lifted = false;
+				inuse = false;
 				LastMousePosX = e.X;
 				LastMousePosY = e.Y;
 				
@@ -205,11 +215,37 @@ namespace WinFormsApp1
 			if (e.Button == MouseButtons.Left)
 			{
 				draw = false;
-				lifted = true;
+				inuse = true;
 				LastMousePosX = -1;
 				LastMousePosY =-1;
 				//pX = e.X;
 				//pY = e.Y;
+				if (elipse && inuse)
+				{
+					Pen pen = new Pen(brushColor, Brushthickness);
+					using (Graphics g = Graphics.FromImage(drawArea))
+					{
+						g.DrawEllipse(pen, new Rectangle(new Point(LastMousePosX > e.X ? e.X : LastMousePosX, LastMousePosY > e.Y ? e.Y : LastMousePosY), new Size(Math.Abs(e.X - LastMousePosX), Math.Abs(e.Y - LastMousePosY))));
+					}
+					pictureBox.Refresh();
+				}
+
+				//oldBitmap = new Bitmap(drawArea, drawArea.Size.Width, drawArea.Size.Height);
+				//using (Graphics G = Graphics.FromImage(drawArea))
+				//{
+				//	G.DrawRectangle(pen, new Rectangle(new Point(LastMousePosX > e.X ? e.X : LastMousePosX, LastMousePosY > e.Y ? e.Y : LastMousePosY), new Size(Math.Abs(e.X - LastMousePosX), Math.Abs(e.Y - LastMousePosY))));
+				//}
+				//pictureBox.Refresh();
+
+				if (sqaure) //&& inuse)
+				{
+					Pen pen = new Pen(brushColor, Brushthickness);
+					using (Graphics g = Graphics.FromImage(drawArea))
+					{
+						g.DrawRectangle(pen, new Rectangle(new Point(LastMousePosX > e.X ? e.X : LastMousePosX, LastMousePosY > e.Y ? e.Y : LastMousePosY), new Size(Math.Abs(e.X - LastMousePosX), Math.Abs(e.Y - LastMousePosY))));
+					}
+					pictureBox.Refresh();
+				}
 
 			}
 		}
@@ -236,7 +272,7 @@ namespace WinFormsApp1
 		{
 			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
-			saveFileDialog1.Filter = "Bitmap files (*.bmp)|*.bmp";
+			saveFileDialog1.Filter = " Bitmap files (*.bmp)|*.bmp";
 			if (saveFileDialog1.ShowDialog() == DialogResult.OK)
 			{
 				drawArea.Save(saveFileDialog1.FileName);
@@ -248,7 +284,7 @@ namespace WinFormsApp1
 			OpenFileDialog openFileDialog = new OpenFileDialog();
 
 			openFileDialog.InitialDirectory = @"C:\Users\Sebastian\Pictures\Screenshots";
-			openFileDialog.Filter = "Bitmap files (*.bmp)|*.bmp";
+			openFileDialog.Filter = "Image files (*.bmp)|*.bmp;*.png;*.jpeg"; //jpeg
 			if (openFileDialog.ShowDialog() == DialogResult.OK)
 			{
 				drawArea = (Bitmap)Image.FromFile(openFileDialog.FileName);
